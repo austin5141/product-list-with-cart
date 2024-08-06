@@ -171,7 +171,6 @@ function page_handler(object) {
             let items = document.querySelectorAll('.cart-item')
             
             for (i = 0; i < items.length; i++) {
-                console.log(i)
                 // Increment the quantity of the item (displayed in the cart)
                 if (items[i].querySelector('.cart-item-name').innerText == item_added) {
                     let curr_cart_amount = Number(items[i].querySelector('.cart-amount').innerText.replace('x', ""))
