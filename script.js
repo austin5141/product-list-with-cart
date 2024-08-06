@@ -5,6 +5,10 @@ let cart_items = document.querySelector('.cart-content')
 let empty_cart = document.querySelector('.empty')
 const checkout = document.querySelector('.checkout')
 let total = document.querySelector('.total-num')
+const modal_bg = document.querySelector('.modal-bg')
+modal_content = document.querySelector('.modal-content')
+modal_items = document.querySelector('.modal-items')
+const confirm = document.querySelector('.confirm')
 let sum = 0
 
 const formatter = new Intl.NumberFormat('en-us', {
@@ -240,8 +244,70 @@ function page_handler(object) {
     })
 }
 
-// Fetch the Json file
-function fetchJson() {
+//Submit order
+confirm.addEventListener('click', function() {
+    const modal_total = document.querySelector('.confirm-total-num')
+    modal_total.innerText = formatter.format(sum)
+    const cart_items = this.parentElement.parentElement.querySelectorAll('.cart-item')
+    const cart_item_names = this.parentElement.parentElement.querySelectorAll('.cart-item-name')
+    const cart_amounts = this.parentElement.parentElement.querySelectorAll('.cart-amount')
+    const cart_initial_prices = this.parentElement.parentElement.querySelectorAll('.initial-price')
+    const cart_full_prices = this.parentElement.parentElement.querySelectorAll('.full-price')
+
+    for (i = 0; i < cart_items.length; i++) {
+
+        const modal_item = document.createElement('div')
+        const modal_box = document.createElement('div')
+        modal_box.classList = 'modal-box flexbox'
+        modal_item.classList = 'modal-item'
+        modal_items.appendChild(modal_box)
+        const modal_item_name = document.createElement('p')
+        modal_item_name.classList = 'modal-cart-item-name'
+        const thumbnail = document.createElement('img');
+        thumbnail.classList = 'thumbnail'
+        modal_box.appendChild(thumbnail)
+        fetchThumbnails(modal_item_name, thumbnail)
+        modal_box.appendChild(modal_item)
+        modal_item_name.innerText = cart_item_names[i].innerText
+        modal_item.appendChild(modal_item_name)
+
+        const flexbox = document.createElement('div')
+        flexbox.classList = 'flexbox'
+        modal_item.appendChild(flexbox)
+
+        const modal_item_amounts = document.createElement('p')
+        modal_item_amounts.innerText = cart_amounts[i].innerText
+        modal_item_amounts.classList = 'modal-item-cart-amount'
+        flexbox.appendChild(modal_item_amounts)
+
+        const modal_item_initial_price = document.createElement('p')
+        modal_item_initial_price.innerText = cart_initial_prices[i].innerText
+        modal_item_initial_price.classList = 'modal_item_initial-price'
+        flexbox.appendChild(modal_item_initial_price)
+
+        const modal_item_full_price = document.createElement('p')
+        modal_item_full_price.innerText = cart_full_prices[i].innerText
+        modal_item_full_price.classList = 'modal-item-full-price'
+        modal_box.appendChild(modal_item_full_price)
+    }
+
+    modal_bg.classList.toggle('hidden')
+    modal_content.classList.toggle('hidden')
+})
+
+modal_bg.addEventListener('click', function() {
+    let modal_box = document.querySelectorAll('.modal-box')
+
+    for (i = 0; i < modal_box.length; i++) {
+        modal_box[i].remove()
+    }
+
+    this.classList.toggle('hidden')
+    modal_content.classList.toggle('hidden')
+})
+
+// Fetch the Json file & render the page
+function renderPage() {
     fetch('data.json')
     .then(response => response.json())
     .then(object => {
@@ -249,4 +315,16 @@ function fetchJson() {
     })
 }
 
-fetchJson()
+function fetchThumbnails(modal_item_name, thumbnail) {
+    fetch('data.json')
+    .then(response => response.json())
+    .then(object => {
+        object.forEach(o => {
+            if (o.name == modal_item_name.innerText) {
+                thumbnail.src = o.image.thumbnail
+            }
+        })
+    })
+}
+
+renderPage()
