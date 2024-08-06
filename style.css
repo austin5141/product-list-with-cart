@@ -378,12 +378,7 @@ main {
     display:flex;
     align-items:center;
     justify-content:center;
-
-}
-
-.btn > a {
     color:hsl(20, 50%, 98%);
-    font-family:"Red Hat Text", sans-serif;
     text-decoration:none;
 }
 
