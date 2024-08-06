@@ -147,12 +147,16 @@ main {
 }
 
 .shopping-cart {
+    display:flex;
+    flex-direction:column;
+    flex-shrink:0;
+    margin-right:2rem;
     background-color:hsl(20, 50%, 98%);
     border-radius:1rem;
-    width:100%;
-    max-width:30rem;
+    width:30rem;
     padding:1.5rem;
     position:relative;
+    right:1rem;
     bottom:4rem;
     height:fit-content;
 }
@@ -219,6 +223,10 @@ main {
     display:flex;
     align-items:center;
     justify-content:center;
+    background-color:hsl(13, 31%, 94%);
+    height:fit-content;
+    border-radius:1rem;
+    height:3rem;
 }
 
 .carbon-neutral img {
