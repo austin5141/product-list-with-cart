@@ -21,32 +21,18 @@ const formatter = new Intl.NumberFormat('en-us', {
 function page_handler(object) {
     object.forEach(o => {
         
-        // Item constructors (page)
+        // Element constructors (page)
+        
+        // Grid items
         const item = document.createElement('div');
-
+        item.classList = 'item';
+        grid.appendChild(item);
+        // Dessert images
         const item_img = document.createElement('div');
         const asset_img_desktop = document.createElement('img');
         const asset_img_tablet = document.createElement('img')
         const asset_img_mobile = document.createElement('img')
 
-        const cart = document.createElement('button');
-        const cart_img = document.createElement('img')
-
-        const select_amount = document.createElement('span')
-        const decrement_btn = document.createElement('button')
-        const decrement_img = document.createElement('img')
-        let amount = document.createElement('span')
-        const increment_btn = document.createElement('button')
-        const increment_img = document.createElement('img')
-
-        const item_title = document.createElement('p');
-        const item_name = document.createElement('p');
-        const item_price = document.createElement('p')
-        
-        // Grid items
-        item.classList = 'item';
-        grid.appendChild(item);
-        // Dessert images
         item_img.classList = 'item-img';
 
         asset_img_desktop.classList = 'dessert-photo desktop';
@@ -59,11 +45,20 @@ function page_handler(object) {
         asset_img_mobile.src = o.image.mobile;
 
         // Add to cart
+        const cart = document.createElement('button');
+        const cart_img = document.createElement('img')
         cart.classList = 'cart'
         cart_img.src = './assets/images/icon-add-to-cart.svg'
         cart.append(cart_img, 'Add to cart')
 
         // Select amount
+        const select_amount = document.createElement('span')
+        const decrement_btn = document.createElement('button')
+        const decrement_img = document.createElement('img')
+        let amount = document.createElement('span')
+        const increment_btn = document.createElement('button')
+        const increment_img = document.createElement('img')
+
         select_amount.classList = 'select-amount hidden'
         decrement_btn.classList = 'select-btn decrement'
         decrement_img.src = './assets/images/icon-decrement-quantity.svg'
@@ -77,14 +72,17 @@ function page_handler(object) {
         item_img.append(asset_img_desktop, asset_img_tablet, asset_img_mobile, cart, select_amount)
 
         // Item title
+        const item_title = document.createElement('p');
         item_title.classList = 'item-title item-text'
         item_title.innerText = `${o.category}`
 
         // Item name
+        const item_name = document.createElement('p');
         item_name.classList = 'item-name item-text'
         item_name.innerText = `${o.name}`
 
         // Item price
+        const item_price = document.createElement('p')
         item_price.classList = 'item-price item-text'
         item_price.innerText = `${formatter.format(o.price)}`
 
@@ -95,24 +93,14 @@ function page_handler(object) {
         // Add to cart buttons
         cart.addEventListener('click', function() {
 
-            // Item constructors (cart)
-            const cart_item = document.createElement('div')
-            cart_item.classList = 'cart-item'
-            const cart_item_name = document.createElement('p')
-            cart_item_name.classList = 'cart-item-name'
-            const item_info = document.createElement('div')
-            item_info.classList = 'item-info'
-            const amount_and_price = document.createElement('p')
-            const amount_in_cart = document.createElement('span')
-            amount_in_cart.classList = 'cart-amount'
-            const initial_price = document.createElement('span')
-            initial_price.classList = 'initial-price'
-            const full_price = document.createElement('span')
-            full_price.classList = 'full-price'
-            const remove_btn = document.createElement('button')
-            
             // Make checkout & total visible
             checkout.classList.remove('hidden')
+
+            // Make the quantity selector visible
+            this.classList.toggle('hidden')
+            select_amount.classList.toggle('hidden')
+            quantity.innerText++;
+            empty_cart.classList.add('hidden')
 
             // Get the item name & price of the item that you added to the cart
             let item_added = this.parentElement.parentElement.querySelector('.item-name').innerText
@@ -121,20 +109,43 @@ function page_handler(object) {
             // Assign the default quantity of the item you picked
             let quantity_of_item = 1
 
-            // Make the quantity selector visible
-            this.classList.toggle('hidden')
-            select_amount.classList.toggle('hidden')
-            quantity.innerText++;
-            empty_cart.classList.add('hidden')
+            // Element constructors (cart)
+
+            // Cart item div
+            const cart_item = document.createElement('div')
+            cart_item.classList = 'cart-item'
+
+            // Cart item info
+            const item_info = document.createElement('div')
+            item_info.classList = 'item-info'
+
+            // Cart item name
+            const cart_item_name = document.createElement('p')
+            cart_item_name.classList = 'cart-item-name'
+            cart_item_name.innerText = item_added
+
+            // Amount of a given item & item prices
+            const amount_and_price = document.createElement('p')
+            const amount_in_cart = document.createElement('span')
+            amount_in_cart.classList = 'cart-amount'
+            amount_in_cart.innerText = `${quantity_of_item}x`
+            item_info.append(cart_item_name, amount_and_price)
+
+            const initial_price = document.createElement('span')
+            initial_price.classList = 'initial-price'
+            const full_price = document.createElement('span')
+            full_price.classList = 'full-price'
+
+            initial_price.innerText = `@ ${item_price}`
+            full_price.innerText = `${formatter.format(item_price)}`
+
+            amount_and_price.append(amount_in_cart, initial_price, full_price)
+
+            // Remove button
+            const remove_btn = document.createElement('button')
 
             // Add item to cart
             cart_items.appendChild(cart_item)
-            cart_item_name.innerText = item_added
-            item_info.append(cart_item_name, amount_and_price)
-            amount_in_cart.innerText = `${quantity_of_item}x`
-            initial_price.innerText = `@ ${item_price}`
-            full_price.innerText = `${formatter.format(item_price)}`
-            amount_and_price.append(amount_in_cart, initial_price, full_price)
             remove_btn.innerText = 'x'
             remove_btn.classList = 'remove-btn'
             cart_item.append(item_info, remove_btn)
@@ -237,6 +248,7 @@ function removeItem() {
 }
 
 //Submit order & display the modal
+
 confirm.addEventListener('click', function() {
     const modal_total = document.querySelector('.confirm-total-num')
     modal_total.innerText = formatter.format(sum)
